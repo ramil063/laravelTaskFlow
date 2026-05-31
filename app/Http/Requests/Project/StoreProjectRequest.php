@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Projects;
+namespace App\Http\Requests\Project;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 /**
- * Сlass UpdateProjectRequest
+ * Сlass StoreProjectRequest
  */
-class UpdateProjectRequest extends FormRequest
+class StoreProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,18 +27,8 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('projects', 'name')->ignore($this->route('project')),
-            ],
-            'description' => [
-                'sometimes',
-                'string',
-                'max:1000',
-            ],
+            'name' => ['required', 'unique:projects', 'max:255'],
+            'description' => ['required', 'string'],
         ];
     }
 }

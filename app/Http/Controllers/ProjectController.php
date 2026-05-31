@@ -2,45 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Projects\ProjectIndexRequest;
-use App\Http\Requests\Projects\StoreProjectRequest;
-use App\Http\Requests\Projects\UpdateProjectRequest;
+use App\Http\Requests\Project\StoreProjectRequest;
+use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
-use App\Repositories\ProjectRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class ProjectsController
  */
-class ProjectsController extends Controller
+class ProjectController extends Controller
 {
-    /**
-     * @param ProjectRepository $projectRepository
-     */
-    public function __construct(
-        private readonly ProjectRepository $projectRepository
-    ) {
-    }
-
     /**
      * Display a listing of the resource.
      *
-     * @param ProjectIndexRequest $request
+     * @param Request $request
      *
-     * @return JsonResponse
+     * @return mixed
      */
-    public function index(ProjectIndexRequest $request): JsonResponse
+    public function index(Request $request): mixed
     {
-        $perPage = $request->input('per_page', 15);
-        $projects = $this->projectRepository->getPaginated($perPage);
-        return response()->json([
-            'values' => $projects->values(),
-            'current_page' => $projects->currentPage(),
-            'per_page' => $projects->perPage(),
-            'last_page' => $projects->lastPage(),
-            'total' => $projects->total(),
+        $request->validate([
+            'per_page' => 'integer|min:1|max:100'
         ]);
+        $perPage = $request->input('per_page', 15);
+        $projects = Project::paginate($perPage);
+        return ProjectResource::collection($projects);
     }
 
     /**
@@ -78,16 +66,13 @@ class ProjectsController extends Controller
      * @param UpdateProjectRequest $request
      * @param Project              $project
      *
-     * @return JsonResponse
+     * @return
      */
-    public function update(UpdateProjectRequest $request, Project $project): JsonResponse
+    public function update(UpdateProjectRequest $request, Project $project): ProjectResource
     {
         $project->update($request->validated());
 
-        return response()->json([
-            'message' => 'Project updated',
-            'data' => new ProjectResource($project)
-        ]);
+        return new ProjectResource($project);
     }
 
     /**
