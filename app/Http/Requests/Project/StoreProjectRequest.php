@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Сlass StoreProjectRequest
+ * Class StoreProjectRequest
  */
 class StoreProjectRequest extends FormRequest
 {
@@ -27,7 +27,12 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'unique:projects', 'max:255'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:projects',
+            ],
             'description' => ['required', 'string'],
         ];
     }

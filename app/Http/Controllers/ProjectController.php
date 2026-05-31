@@ -8,6 +8,7 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * Class ProjectsController
@@ -19,12 +20,12 @@ class ProjectController extends Controller
      *
      * @param Request $request
      *
-     * @return mixed
+     * @return AnonymousResourceCollection
      */
-    public function index(Request $request): mixed
+    public function index(Request $request): AnonymousResourceCollection
     {
         $request->validate([
-            'per_page' => 'integer|min:1|max:100'
+            'per_page' => 'sometimes|integer|min:1|max:100',
         ]);
         $perPage = $request->input('per_page', 15);
         $projects = Project::paginate($perPage);
