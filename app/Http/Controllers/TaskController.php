@@ -17,8 +17,7 @@ class TaskController extends Controller
      */
     public function index(Project $project)
     {
-        $project->load('tasks');
-        return new ProjectResource($project);
+        return TaskResource::collection($project->tasks);
     }
 
     /**

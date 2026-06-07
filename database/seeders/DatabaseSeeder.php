@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        Project::factory(5)->create();
-        Task::factory(20)->create();
+        Project::factory(5)
+            ->hasTasks(4)
+            ->create();
     }
 }

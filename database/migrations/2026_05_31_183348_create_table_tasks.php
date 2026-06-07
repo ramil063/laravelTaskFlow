@@ -20,8 +20,6 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->timestamps();
-
-            $table->index('project_id');
         });
     }
 

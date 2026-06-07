@@ -34,6 +34,7 @@ class UpdateTaskRequest extends FormRequest
                 'exists:projects,id'
             ],
             'title'       => [
+                'sometimes',
                 'required',
                 'string',
                 'max:255',
