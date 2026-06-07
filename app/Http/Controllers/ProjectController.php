@@ -28,7 +28,7 @@ class ProjectController extends Controller
             'per_page' => 'sometimes|integer|min:1|max:100',
         ]);
         $perPage = $request->input('per_page', 15);
-        $projects = Project::paginate($perPage);
+        $projects = Project::with(['tasks'])->paginate($perPage);
         return ProjectResource::collection($projects);
     }
 
@@ -58,7 +58,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project): ProjectResource
     {
-        return new ProjectResource($project);
+        return new ProjectResource($project->load(['tasks']));
     }
 
     /**
